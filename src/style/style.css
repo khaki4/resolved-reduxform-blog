@@ -1,0 +1,10 @@
+.App {
+    padding-top: 50px;
+}
+.button-group {
+    display: flex;
+    flex-direction: row;
+}
+.button-group.right {
+    justify-content: flex-end;
+}
