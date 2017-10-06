@@ -12,7 +12,7 @@ class PostShow extends Component {
   goRootPage = () => {
     this.props.history.push('/')
   }
-  
+
   render() {
     const { post } = this.props
     const { id } = this.props.match.params

@@ -1,16 +1,20 @@
 import mapKeys from 'lodash/mapKeys';
+import { normalize, schema } from 'normalizr';
 import _filter from 'lodash/filter';
 import { getPosts, createPost, destoryPost } from '../../service/postService';
 
 // Actions
 export const POST_FETCH_REQUEST = 'blog_heroku_api/posts/POST_FETCH_REQUEST'
+export const POST_FETCH_ONE_REQUEST = 'blog_heroku_api/posts/POST_FETCH_ONE_REQUEST'
 export const POST_FETCH = 'blog_heroku_api/posts/POST_FETCH'
+export const POST_FETCH_ONE = 'blog_heroku_api/posts/POST_FETCH_ONE'
 export const POST_ADD = 'blog_heroku_api/posts/POST_ADD'
 export const POST_DELETE = 'blog_heroku_api/posts/POST_DELETE'
 const MODAL_WINDOW_CHANGE = 'blog_heroku_api/posts/MODAL_WINDOW_CHANGE'
 
 // Action Creators
 export const requestPost = () => ({type: POST_FETCH_REQUEST})
+export const requestOnePost = (id) => ({type: POST_FETCH_ONE_REQUEST, payload: id})
 export const fetchPosts = (posts) => ({type: POST_FETCH, payload: posts})
 export const changeModalWindow = (isOpen) => ({ type: MODAL_WINDOW_CHANGE, payload: isOpen })
 export const addPost = (post) => ({ type: POST_ADD, payload: post })
@@ -25,7 +29,7 @@ export const savePost = (post, resetForm) => (dispatch) => {
 export const loadPosts = () => (dispatch) => {
   getPosts()
     .then(posts => {
-      dispatch(fetchPosts(posts))
+      dispatch(fetchPosts(posts.data))
     })
 }
 export const deletePost = (id, callback) => (dispatch) => {
@@ -36,22 +40,29 @@ export const deletePost = (id, callback) => (dispatch) => {
 // Reducer
 const initState = {
   posts: [],
-  modal: {}
+  selectedPost: {},
+  modal: {},
 }
+
+const postsSchema = new schema.Entity('posts')
+const postsListSchema = [postsSchema];
 export default (state = initState, action) => {
   switch (action.type) {
-    case POST_FETCH_REQUEST:
-      return {...state}
     case POST_FETCH:
-      console.log('posts:', mapKeys(action.payload.data, 'id'))
+      console.log('posts:', normalize(action.payload, postsListSchema))
       return {
         ...state,
-        posts: mapKeys(action.payload.data, 'id')
+        posts: normalize(action.payload, postsListSchema).entities.posts
+      }
+    case POST_FETCH_ONE:
+      return {
+        ...state,
+        selectedPost: action.payload
       }
     case POST_ADD:
       return {
         ...state,
-        posts: {...state.posts, [action.payload.data.id]: {...action.payload.data}}
+        posts: {...state.posts, [action.payload.id]: {...action.payload}}
       }
     case MODAL_WINDOW_CHANGE:
       return {
@@ -76,7 +87,7 @@ export const getVisiblePosts = (posts, filter) => {
       return post
     }
   })
-  const result = mapKeys(filteredPosts, 'id')
-  
+  const result = normalize(filteredPosts, postsListSchema).entities.posts
+
   return result
 }
