@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { Button, Header, Modal, Form, Segment, Input, Select } from 'semantic-ui-react';
+import { Button, Header, Modal, Form, Segment, Input, Select, TextArea } from 'semantic-ui-react';
 import { changeModalWindow, savePost } from '../../reducers/post/postIndex';
 
 const InputField = (field) => {
@@ -9,7 +9,7 @@ const InputField = (field) => {
   const className = `form-group ${touched && error ? 'has-danger' : ''}`
   return (
     <div className={className}>
-      <label>{field.label}</label>
+      <h4 className="title-label">{field.label}</h4>
       <Input
         {...field.input}
       />
@@ -24,12 +24,29 @@ const SelectField = (field) => {
   const className = `form-group ${touched && error ? 'has-danger' : ''}`
   return (
     <div className={className}>
-      <label>{field.label}</label>
+      <h4 className="title-label">{field.label}</h4>
       <Select
         options={getValueList()}
         {...field.input}
         value={field.input.value}
         onChange={(event, data) => field.input.onChange(data.value)}
+        placeholder={field.label}
+      />
+      <div className="text-help">
+        {touched ? error : ''}
+      </div>
+    </div>
+  )
+}
+const TextAreaField = (field) => {
+  const { meta: { touched, error }} = field
+  const className = `form-group ${touched && error ? 'has-danger' : ''}`
+  return (
+    <div className={className}>
+      <h4 className="title-label">{field.label}</h4>
+      <TextArea
+        {...field.input}
+        value={field.input.value}
         placeholder={field.label}
       />
       <div className="text-help">
@@ -91,6 +108,11 @@ const PostCreatModal = props => {
                 label="select category"
                 name="category"
                 component={SelectField}
+              />
+              <Field
+                label="Input Contents"
+                name="content"
+                component={TextAreaField}
               />
               <div className="button-group right">
                 <Form.Field
