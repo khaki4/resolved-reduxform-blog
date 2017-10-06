@@ -1,18 +1,47 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import {
-  LabelInputField,
-  CheckboxField,
-  TextAreaField,
-  SelectField
-} from 'react-semantic-redux-form';
-import { Button, Header, Modal, Form, Segment } from 'semantic-ui-react';
+import { Button, Header, Modal, Form, Segment, Input, Select } from 'semantic-ui-react';
 import { changeModalWindow, savePost } from '../../reducers/post/postIndex';
+
+const InputField = (field) => {
+  const { meta: { touched, error }} = field
+  const className = `form-group ${touched && error ? 'has-danger' : ''}`
+  return (
+    <div className={className}>
+      <label>{field.label}</label>
+      <Input
+        {...field.input}
+      />
+      <div className="text-help">
+        {touched ? error : ''}
+      </div>
+    </div>
+  )
+}
+const SelectField = (field) => {
+  const { meta: { touched, error }} = field
+  const className = `form-group ${touched && error ? 'has-danger' : ''}`
+  return (
+    <div className={className}>
+      <label>{field.label}</label>
+      <Select
+        options={getValueList()}
+        {...field.input}
+        value={field.input.value}
+        onChange={(event, data) => field.input.onChange(data.value)}
+        placeholder={field.label}
+      />
+      <div className="text-help">
+        {touched ? error : ''}
+      </div>
+    </div>
+  )
+}
 
 const getValueList = () => {
   const options = ['Life', 'Hobby', 'test', '분류 없음'];
-
+  
   return options.map(item => {
     return {
       key: item,
@@ -24,12 +53,13 @@ const getValueList = () => {
 
 const PostCreatModal = props => {
   if (!props) return null;
-
+  
   const { modal, handleSubmit, reset, changeModalWindow, savePost } = props;
+  
   const handleOpen = () => changeModalWindow(true);
   const onAddPostClick = values => {
     if (!values.title) return;
-
+    
     const { title, category, content, isPrivate } = values;
     const newPost = {
       title,
@@ -53,22 +83,15 @@ const PostCreatModal = props => {
           <div>
             <Form onSubmit={handleSubmit(onAddPostClick)}>
               <Field
+                label="Title For Post"
                 name="title"
-                component={LabelInputField}
-                placeholder="제목을 입력해주세요"
+                component={InputField}
               />
               <Field
+                label="select category"
                 name="category"
                 component={SelectField}
-                options={getValueList()}
-                placeholder="카테고리를 입력해주세요"
               />
-              <Field
-                name="content"
-                component={TextAreaField}
-                placeholder="내용을 입력해주세요"
-              />
-              <Field name="isPrivate" label="비공개" component={CheckboxField} />
               <div className="button-group right">
                 <Form.Field
                   control={Button}
@@ -100,7 +123,7 @@ const PostCreatModal = props => {
 
 const validate = ({ title, content, category }) => {
   const errors = {};
-
+  
   if (!title) {
     errors.title = 'Enter a title!';
   }
@@ -113,7 +136,7 @@ const validate = ({ title, content, category }) => {
   if (!content) {
     errors.content = 'Enter a content!';
   }
-
+  
   return errors;
 };
 
