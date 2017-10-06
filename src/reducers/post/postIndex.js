@@ -1,6 +1,5 @@
 import mapKeys from 'lodash/mapKeys';
 import _filter from 'lodash/filter';
-import { normalize, schema } from 'normalizr';
 import { getPosts, createPost, destoryPost } from '../../service/postService';
 
 // Actions
@@ -37,20 +36,13 @@ const initState = {
   posts: [],
   modal: {}
 }
-
-const postSchema = new schema.Entity('posts')
-const postListSchema = [postSchema]
-
 export default (state = initState, action) => {
   switch (action.type) {
     case POST_FETCH:
-      console.log('posts raw        :', action.payload.data)
-      console.log('posts mapKeys    :', mapKeys(action.payload.data, 'id'))
-      console.log('posts normalize  :', normalize(action.payload.data, postListSchema))
-      console.log('-----------------------------------------------------')
+      console.log('posts:', mapKeys(action.payload.data, 'id'))
       return {
         ...state,
-        posts: normalize(action.payload.data, postListSchema).entities.posts
+        posts: mapKeys(action.payload.data, 'id')
       }
     case POST_ADD:
       return {
@@ -80,7 +72,7 @@ export const getVisiblePosts = (posts, filter) => {
       return post
     }
   })
-  const result = normalize(filteredPosts, postListSchema).entities.posts
-
+  const result = mapKeys(filteredPosts, 'id')
+  
   return result
 }
