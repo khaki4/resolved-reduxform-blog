@@ -5,7 +5,7 @@ import map from 'lodash/map'
 import { List, Grid } from 'semantic-ui-react'
 import PostCreatModal from './PostAddModal';
 import PostCategories from './PostCategories'
-import { getVisiblePosts, requestPost } from '../../reducers/post/postIndex';
+import { getSelectVisiblePosts, requestPost } from '../../reducers/post/postIndex';
 
 class PostIndex extends Component {
   componentDidMount() {
@@ -27,6 +27,8 @@ class PostIndex extends Component {
     })
   }
   render () {
+    console.log('render PostList')
+    console.log('--------------------------------------------')
     return (
       <div>
         <Grid columns={2} divided>
@@ -40,9 +42,7 @@ class PostIndex extends Component {
             </Grid.Column>
             <Grid.Column>
               <h3>Post Categories</h3>
-              <PostCategories
-                posts={this.props.originalPosts}
-              />
+              <PostCategories />
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -52,9 +52,6 @@ class PostIndex extends Component {
 }
 
 export default connect(
-  (state, ownProps) => ({
-    posts: getVisiblePosts(state.dashboard.posts, ownProps.match.params.filter),
-    originalPosts: state.dashboard.posts,
-  }),
+  (state, ownProps) => ({posts: getSelectVisiblePosts(state, ownProps)}),
   { requestPost }
 )(PostIndex)

@@ -16,6 +16,7 @@
     "redux-promise": "^0.5.3",
     "redux-saga": "^0.15.6",
     "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
     "semantic-ui-react": "^0.74.2"
   },
   "scripts": {
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@types/react": "^16.0.7",
+    "@types/reselect": "^2.2.0",
     "babel-preset-react": "^6.24.1",
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6"

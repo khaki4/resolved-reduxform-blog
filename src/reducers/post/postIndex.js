@@ -1,6 +1,7 @@
 import mapKeys from 'lodash/mapKeys';
 import { normalize, schema } from 'normalizr';
 import _filter from 'lodash/filter';
+import { createSelector } from 'reselect';
 
 // Actions
 export const POST_FETCH_REQUEST = 'blog_heroku_api/posts/POST_FETCH_REQUEST'
@@ -63,16 +64,27 @@ export default (state = initState, action) => {
 }
 
 // selector
-export const getVisiblePosts = (posts, filter) => {
-  if (!filter) {
-    return posts
-  }
-  const filteredPosts = _filter(posts, (post) => {
-    if (post && post.categories && post.categories === filter) {
-      return post
+export const getSelectVisiblePosts = createSelector(
+  (state) => state.dashboard.posts,
+  (state, ownProps) => ownProps.match.params.filter,
+  (posts, filter) => {
+    if (!filter) {
+      return posts
     }
-  })
-  const result = normalize(filteredPosts, postsListSchema).entities.posts
+    const filteredPosts = _filter(posts, (post) => {
+      if (post && post.categories && post.categories === filter) {
+        return post
+      }
+    })
+    const result = normalize(filteredPosts, postsListSchema).entities.posts
+    
+    return result
+  }
+)
 
-  return result
-}
+export const getSelectedCategories = createSelector(
+  (state, props) => state.dashboard.posts, // 매개변수 정의 : 매개변수의 변경이 없다면 계산하지 않고 그대로 보여준다.
+  (posts) => posts
+)
+
+
