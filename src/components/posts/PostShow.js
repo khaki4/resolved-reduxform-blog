@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
-import { loadPosts, deletePost } from '../../reducers/post/postIndex'
+import { requestOnePost, deletePostRequest } from '../../reducers/post/postIndex'
 
 class PostShow extends Component {
   componentDidMount() {
     const { id } = this.props.match.params
-    this.props.loadPosts(id)
+    this.props.requestOnePost(id)
   }
   goRootPage = () => {
     this.props.history.push('/')
@@ -24,7 +24,7 @@ class PostShow extends Component {
         <Link to="/">Back to index</Link>
         <div>
           <Button
-            onClick={() => this.props.deletePost(id, this.goRootPage)}
+            onClick={() => this.props.deletePostRequest(id, this.goRootPage)}
           >
             Delete Post
           </Button>
@@ -39,6 +39,8 @@ class PostShow extends Component {
 }
 
 export default connect(
-  (state, ownProps) => ({ post: state.dashboard.posts[ownProps.match.params.id] }),
-  { loadPosts, deletePost }
+  (state) => {
+    return ({ post: state.dashboard.selectedPost })
+  },
+  { requestOnePost, deletePostRequest }
 )(PostShow)

@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import map from 'lodash/map'
 import { List, Grid } from 'semantic-ui-react'
-import PostCreatModal from './PostAddButton';
+import PostCreatModal from './PostAddModal';
 import PostCategories from './PostCategories'
-import { loadPosts, getVisiblePosts } from '../../reducers/post/postIndex';
+import { getVisiblePosts, requestPost } from '../../reducers/post/postIndex';
 
 class PostIndex extends Component {
   componentDidMount() {
-    this.props.loadPosts()
+    this.props.requestPost()
   }
   renderPosts = () => {
     const { posts } = this.props
@@ -56,5 +56,5 @@ export default connect(
     posts: getVisiblePosts(state.dashboard.posts, ownProps.match.params.filter),
     originalPosts: state.dashboard.posts,
   }),
-  { loadPosts }
+  { requestPost }
 )(PostIndex)
