@@ -1,41 +1,26 @@
-import { takeEvery } from 'redux-saga';
+// import { takeEvery } from 'redux-saga';
 import { all, fork, call, put, take } from 'redux-saga/effects';
-import {
-  getPosts,
-  getOnePost,
-  createPost,
-  destoryPost
-} from '../service/postService';
-import {
-  POST_FETCH_REQUEST,
-  POST_FETCH_ONE_REQUEST,
-  POST_CREATE_REQUEST,
-  POST_DELETE_REQUEST,
-  loadPosts,
-  loadOnePost,
-  addPost,
-  changeModalWindow
-} from '../reducers/post/postIndex';
+import * as fromPostService from '../service/postService';
+import * as fromPostIndex from '../reducers/post/postIndex'
 
 function* fetchPosts() {
   try {
-    const response = yield getPosts();
+    const response = yield fromPostService.getPosts();
     console.log('-----------------------------');
     console.log('response:', response);
     console.log('-----------------------------');
-    yield put(loadPosts(response.data));
+    yield put(fromPostIndex.loadPosts(response.data));
   } catch (error) {
     console.warn(error);
   }
 }
 function* fetchOnePost(action) {
-  console.log(action);
   try {
-    const response = yield getOnePost(action.payload);
+    const response = yield fromPostService.getOnePost(action.payload);
     console.log('-----------------------------');
     console.log('one post:', response);
     console.log('-----------------------------');
-    yield put(loadOnePost(response.data));
+    yield put(fromPostIndex.loadOnePost(response.data));
   } catch (error) {
     console.warn(error);
   }
@@ -44,10 +29,11 @@ function* fetchOnePost(action) {
 function* createNewPost(action) {
   console.log('createNewPost:', action);
   try {
-    const response = yield createPost(action.post);
-    yield put(addPost(response.data));
+    const response = yield fromPostService.createPost(action.post);
+    yield put(fromPostIndex.addPost(response.data));
     yield action.resetForm();
-    yield put(changeModalWindow(false));
+    yield put(fromPostIndex.changeModalWindow(false));
+    yield action.resetForm()
   } catch (error) {
     console.warn(error);
   }
@@ -58,7 +44,7 @@ function* goRootPage(action) {
 function* deletePost(action) {
   console.log('deletePost action:', action);
   try {
-    const response = yield destoryPost(action.payload);
+    yield fromPostService.destoryPost(action.payload);
     yield call(goRootPage, action.goRootPage);
   } catch (error) {
     console.log('error deletePost -', error);
@@ -67,26 +53,25 @@ function* deletePost(action) {
 
 function* watchFetchPostsRequest() {
   while (true) {
-    yield take(POST_FETCH_REQUEST);
+    yield take(fromPostIndex.POST_FETCH_REQUEST);
     yield call(fetchPosts);
   }
 }
 function* watchFetchOnePostRequest() {
   while (true) {
-    const action = yield take(POST_FETCH_ONE_REQUEST);
+    const action = yield take(fromPostIndex.POST_FETCH_ONE_REQUEST);
     yield call(fetchOnePost, action);
   }
 }
 function* watchCreatePostRequest() {
   while (true) {
-    const action = yield take(POST_CREATE_REQUEST);
+    const action = yield take(fromPostIndex.POST_CREATE_REQUEST);
     yield call(createNewPost, action);
   }
 }
-
 function* watchDeletePostRequest() {
   while (true) {
-    const action = yield take(POST_DELETE_REQUEST);
+    const action = yield take(fromPostIndex.POST_DELETE_REQUEST);
     console.log('-----------------------------');
     console.log('watchDeletePostRequest:', action);
     console.log('-----------------------------');
