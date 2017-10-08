@@ -52,6 +52,6 @@ class PostIndex extends Component {
 }
 
 export default connect(
-  (state, ownProps) => ({posts: getSelectVisiblePosts(state, ownProps)}),
+  (state, ownProps) => ({posts: getSelectVisiblePosts(state.dashboard.posts, ownProps.match.params.filter)}),
   { requestPost }
 )(PostIndex)
