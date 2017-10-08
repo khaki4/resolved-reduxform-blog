@@ -167,9 +167,7 @@ export default reduxForm({
   form: 'PostNewForm'
 })(
   connect(
-    state => ({
-      modal: state.dashboard.modal
-    }),
+    (state, ownProps) => ({modal: state.dashboard.modal}),
     { changeModalWindow, savePost }
   )(PostCreatModal)
 );
