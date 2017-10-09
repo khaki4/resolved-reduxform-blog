@@ -23,13 +23,12 @@ export const savePost           = (post, resetForm) => ({type: POST_CREATE_REQUE
 export const deletePostRequest  = (id, goRootPage) => ({ type: POST_DELETE_REQUEST, payload: id, goRootPage})
 
 // Reducers
+const postsSchema = new schema.Entity('posts')
+const postsListSchema = [postsSchema];
 const initState = {
   posts: [],
   postOne: {},
 }
-const postsSchema = new schema.Entity('posts')
-const postsListSchema = [postsSchema];
-
 // follow rules of 'https://deminoth.github.io/redux/recipes/reducers/BasicReducerStructure.html'
 // domain data reducer
 export default (state = initState, action) => {
@@ -71,9 +70,8 @@ export const getSelectVisiblePosts = (() => {
           return post
         }
       })
-      const result = normalize(filteredPosts, postsListSchema).entities.posts
       
-      return result
+      return filteredPosts
     }
   )
 })()

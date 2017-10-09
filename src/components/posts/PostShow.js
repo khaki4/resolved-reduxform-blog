@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 import { requestOnePost, deletePostRequest } from '../../reducers/post/domainPosts'
 
