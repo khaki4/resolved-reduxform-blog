@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
-import { requestOnePost, deletePostRequest } from '../../reducers/post/postIndex'
+import { requestOnePost, deletePostRequest } from '../../reducers/post/domainPosts'
 
 class PostShow extends Component {
   componentDidMount() {
@@ -40,7 +40,7 @@ class PostShow extends Component {
 
 export default connect(
   (state) => {
-    return ({ post: state.dashboard.selectedPost })
+    return ({ post: state.dashboard.postOne })
   },
   { requestOnePost, deletePostRequest }
 )(PostShow)

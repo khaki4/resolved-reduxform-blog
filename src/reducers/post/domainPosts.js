@@ -4,7 +4,7 @@ import _filter from 'lodash/filter';
 import { createSelector } from 'reselect';
 
 // Actions
-const BASE_PREFIX                   = 'blog_heroku_api/posts/'
+const BASE_PREFIX                   = 'blog_heroku_api/domain_posts/'
 export const POST_FETCH_REQUEST     = `${BASE_PREFIX}POST_FETCH_REQUEST`
 export const POST_FETCH_ONE_REQUEST = `${BASE_PREFIX}POST_FETCH_ONE_REQUEST`
 export const POST_DELETE_REQUEST    = `${BASE_PREFIX}POST_DELETE_REQUEST`
@@ -12,14 +12,12 @@ export const POST_LOAD              = `${BASE_PREFIX}POST_LOAD`
 export const POST_FETCH_ONE         = `${BASE_PREFIX}POST_FETCH_ONE`
 export const POST_ADD               = `${BASE_PREFIX}POST_ADD`
 export const POST_CREATE_REQUEST    = `${BASE_PREFIX}POST_CREATE_REQUEST`
-const MODAL_WINDOW_CHANGE           = `${BASE_PREFIX}MODAL_WINDOW_CHANGE`
 
 // Action Creators
 export const requestPost        = () => ({type: POST_FETCH_REQUEST})
 export const requestOnePost     = (id) => ({type: POST_FETCH_ONE_REQUEST, payload: id})
 export const loadOnePost        = (post) => ({type: POST_FETCH_ONE, payload: post})
 export const loadPosts          = (posts) => ({type: POST_LOAD, payload: posts})
-export const changeModalWindow  = (isOpen) => ({ type: MODAL_WINDOW_CHANGE, payload: isOpen })
 export const addPost            = (post) => ({ type: POST_ADD, payload: post })
 export const savePost           = (post, resetForm) => ({type: POST_CREATE_REQUEST, post, resetForm})
 export const deletePostRequest  = (id, goRootPage) => ({ type: POST_DELETE_REQUEST, payload: id, goRootPage})
@@ -27,11 +25,13 @@ export const deletePostRequest  = (id, goRootPage) => ({ type: POST_DELETE_REQUE
 // Reducers
 const initState = {
   posts: [],
-  selectedPost: {},
-  modal: {},
+  postOne: {},
 }
 const postsSchema = new schema.Entity('posts')
 const postsListSchema = [postsSchema];
+
+// follow rules of 'https://deminoth.github.io/redux/recipes/reducers/BasicReducerStructure.html'
+// domain data reducer
 export default (state = initState, action) => {
   switch (action.type) {
     case POST_LOAD:
@@ -43,20 +43,12 @@ export default (state = initState, action) => {
     case POST_FETCH_ONE:
       return {
         ...state,
-        selectedPost: action.payload
+        postOne: action.payload
       }
     case POST_ADD:
       return {
         ...state,
         posts: {...state.posts, [action.payload.id]: {...action.payload}}
-      }
-    case MODAL_WINDOW_CHANGE:
-      return {
-        ...state,
-        modal: {
-          ...state.modal,
-          isOpen: action.payload
-        }
       }
     default:
       return state

@@ -5,7 +5,7 @@ import map from 'lodash/map'
 import { List, Grid } from 'semantic-ui-react'
 import PostCreatModal from './PostAddModal';
 import PostCategories from './PostCategories'
-import { getSelectVisiblePosts, requestPost } from '../../reducers/post/postIndex';
+import { getSelectVisiblePosts, requestPost } from '../../reducers/post/domainPosts';
 
 class PostIndex extends Component {
   componentDidMount() {

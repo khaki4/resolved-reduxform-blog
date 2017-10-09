@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Button, Header, Modal, Form, Segment, Input, Select, TextArea } from 'semantic-ui-react';
-import { changeModalWindow, savePost } from '../../reducers/post/postIndex';
+import { savePost } from '../../reducers/post/domainPosts';
+import { changeModalWindow } from '../../reducers/post/uiPostAddModal';
 
 const InputField = (field) => {
   const { meta: { touched, error }} = field
@@ -71,7 +72,7 @@ const getValueList = () => {
 const PostCreatModal = props => {
   if (!props) return null;
   
-  const { modal, handleSubmit, reset, changeModalWindow, savePost } = props;
+  const { uiModal, handleSubmit, reset, changeModalWindow, savePost } = props;
   
   const handleOpen = () => changeModalWindow(true);
   const onAddPostClick = values => {
@@ -92,7 +93,7 @@ const PostCreatModal = props => {
       trigger={<Button primary onClick={handleOpen}>포스트 생성</Button>}
       basic
       size="small"
-      open={modal.isOpen}
+      open={uiModal.isOpen}
     >
       <Segment>
         <Header content="Create Post" />
@@ -167,7 +168,7 @@ export default reduxForm({
   form: 'PostNewForm'
 })(
   connect(
-    (state, ownProps) => ({modal: state.dashboard.modal}),
+    (state) => ({uiModal: state.ui.uiPostAddModal}),
     { changeModalWindow, savePost }
   )(PostCreatModal)
 );

@@ -1,7 +1,8 @@
 // import { takeEvery } from 'redux-saga';
 import { all, fork, call, put, take } from 'redux-saga/effects';
 import * as fromPostService from '../service/postService';
-import * as fromPostIndex from '../reducers/post/postIndex'
+import * as fromDomainPosts from '../reducers/post/domainPosts'
+import * as fromUiPostAddModal from '../reducers/post/uiPostAddModal'
 
 function* fetchPosts() {
   try {
@@ -9,7 +10,7 @@ function* fetchPosts() {
     console.log('-----------------------------');
     console.log('response:', response);
     console.log('-----------------------------');
-    yield put(fromPostIndex.loadPosts(response.data));
+    yield put(fromDomainPosts.loadPosts(response.data));
   } catch (error) {
     console.warn(error);
   }
@@ -20,7 +21,7 @@ function* fetchOnePost(action) {
     console.log('-----------------------------');
     console.log('one post:', response);
     console.log('-----------------------------');
-    yield put(fromPostIndex.loadOnePost(response.data));
+    yield put(fromDomainPosts.loadOnePost(response.data));
   } catch (error) {
     console.warn(error);
   }
@@ -30,9 +31,9 @@ function* createNewPost(action) {
   console.log('createNewPost:', action);
   try {
     const response = yield fromPostService.createPost(action.post);
-    yield put(fromPostIndex.addPost(response.data));
+    yield put(fromDomainPosts.addPost(response.data));
     yield action.resetForm();
-    yield put(fromPostIndex.changeModalWindow(false));
+    yield put(fromUiPostAddModal.changeModalWindow(false));
     yield action.resetForm()
   } catch (error) {
     console.warn(error);
@@ -53,25 +54,25 @@ function* deletePost(action) {
 
 function* watchFetchPostsRequest() {
   while (true) {
-    yield take(fromPostIndex.POST_FETCH_REQUEST);
+    yield take(fromDomainPosts.POST_FETCH_REQUEST);
     yield call(fetchPosts);
   }
 }
 function* watchFetchOnePostRequest() {
   while (true) {
-    const action = yield take(fromPostIndex.POST_FETCH_ONE_REQUEST);
+    const action = yield take(fromDomainPosts.POST_FETCH_ONE_REQUEST);
     yield call(fetchOnePost, action);
   }
 }
 function* watchCreatePostRequest() {
   while (true) {
-    const action = yield take(fromPostIndex.POST_CREATE_REQUEST);
+    const action = yield take(fromDomainPosts.POST_CREATE_REQUEST);
     yield call(createNewPost, action);
   }
 }
 function* watchDeletePostRequest() {
   while (true) {
-    const action = yield take(fromPostIndex.POST_DELETE_REQUEST);
+    const action = yield take(fromDomainPosts.POST_DELETE_REQUEST);
     console.log('-----------------------------');
     console.log('watchDeletePostRequest:', action);
     console.log('-----------------------------');
