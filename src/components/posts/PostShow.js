@@ -38,9 +38,13 @@ class PostShow extends Component {
   }
 }
 
-export default connect(
-  (state) => {
-    return ({ post: state.dashboard.postOne })
+export default withRouter(connect(
+  (state, { history, match}) => {
+    return ({
+      post: state.dashboard.postOne,
+      history,
+      match,
+    })
   },
   { requestOnePost, deletePostRequest }
-)(PostShow)
+)(PostShow))
