@@ -1,9 +1,9 @@
 // Actions
 const BASE_PREFIX           = 'blog_heroku_api/domain_posts/'
-const MODAL_WINDOW_CHANGE   = `${BASE_PREFIX}MODAL_WINDOW_CHANGE`
+const SET_MODAL_WINDOW_STATE   = `${BASE_PREFIX}SET_MODAL_WINDOW_STATE`
 
 // Action Creators
-export const changeModalWindow = (isOpen) => ({ type: MODAL_WINDOW_CHANGE, payload: isOpen })
+export const changeModalWindow = (isOpen) => ({ type: SET_MODAL_WINDOW_STATE, payload: isOpen })
 
 // reducer
 const initState = {
@@ -12,7 +12,7 @@ const initState = {
 
 export default (state = initState, action) => {
   switch (action.type) {
-    case MODAL_WINDOW_CHANGE:
+    case SET_MODAL_WINDOW_STATE:
       return {
         ...state,
         isOpen: action.payload
