@@ -81,10 +81,10 @@ function* watchDeletePostRequest() {
 }
 
 export default function* root() {
-  yield all([
+  yield [
     fork(watchFetchPostsRequest),
     fork(watchFetchOnePostRequest),
     fork(watchCreatePostRequest),
     fork(watchDeletePostRequest)
-  ]);
+  ];
 }
