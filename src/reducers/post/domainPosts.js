@@ -7,6 +7,7 @@ import { createSelector } from 'reselect';
 const BASE_PREFIX                   = 'blog_heroku_api/domain_posts/'
 export const POST_FETCH_REQUEST     = `${BASE_PREFIX}POST_FETCH_REQUEST`
 export const POST_FETCH_ONE_REQUEST = `${BASE_PREFIX}POST_FETCH_ONE_REQUEST`
+export const POST_FETCH_CLEAR       = `${BASE_PREFIX}POST_FETCH_CLEAR`
 export const POST_DELETE_REQUEST    = `${BASE_PREFIX}POST_DELETE_REQUEST`
 export const POST_LOAD              = `${BASE_PREFIX}POST_LOAD`
 export const POST_FETCH_ONE         = `${BASE_PREFIX}POST_FETCH_ONE`
@@ -16,6 +17,7 @@ export const POST_CREATE_REQUEST    = `${BASE_PREFIX}POST_CREATE_REQUEST`
 // Action Creators
 export const requestPost        = () => ({type: POST_FETCH_REQUEST})
 export const requestOnePost     = (id) => ({type: POST_FETCH_ONE_REQUEST, payload: id})
+export const OnePostClear       = (id) => ({type: POST_FETCH_CLEAR})
 export const loadOnePost        = (post) => ({type: POST_FETCH_ONE, payload: post})
 export const loadPosts          = (posts) => ({type: POST_LOAD, payload: posts})
 export const addPost            = (post) => ({ type: POST_ADD, payload: post })
@@ -43,6 +45,11 @@ export default (state = initState, action) => {
       return {
         ...state,
         postOne: action.payload
+      }
+    case POST_FETCH_CLEAR:
+      return {
+        ...state,
+        postOne: {},
       }
     case POST_ADD:
       return {

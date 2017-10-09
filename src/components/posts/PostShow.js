@@ -2,12 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
-import { requestOnePost, deletePostRequest } from '../../reducers/post/domainPosts'
+import { requestOnePost, deletePostRequest, OnePostClear } from '../../reducers/post/domainPosts'
 
 class PostShow extends Component {
   componentDidMount() {
     const { id } = this.props.match.params
     this.props.requestOnePost(id)
+  }
+  componentWillUnmount() {
+    this.props.OnePostClear()
   }
   goRootPage = () => {
     this.props.history.push('/')
@@ -46,5 +49,5 @@ export default withRouter(connect(
       match,
     })
   },
-  { requestOnePost, deletePostRequest }
+  { requestOnePost, OnePostClear, deletePostRequest }
 )(PostShow))
