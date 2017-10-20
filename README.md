@@ -18,6 +18,7 @@
  - [ ] redux-saga (need to more and deepper understanding)
  - [ ] normalizr (need to more study)
  - [x] reselect library for performance
+ - [ ] structure for redux-store
  - [x] structure for redux-saga
  - [x] Ducks - Redux Reducer Bundles
  - [x] generator
