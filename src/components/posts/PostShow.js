@@ -15,7 +15,7 @@ class PostShow extends Component {
   goRootPage = () => {
     this.props.history.push('/')
   }
-
+  testFn = () => console.log('test')
   render() {
     const { post } = this.props
     const { id } = this.props.match.params
@@ -24,7 +24,16 @@ class PostShow extends Component {
     }
     return (
       <div>
-        <Link to="/">Back to index</Link>
+        {/*<Link to="/">Back to index</Link>*/}
+        <a onClick={() => {
+          const location = {
+            pathname: '/',
+            props: {
+              testFn: this.goRootPage
+            }
+          }
+          this.props.history.push(location)
+        }}>Back to index</a>
         <div>
           <Button
             onClick={() => this.props.deletePostRequest(id, this.goRootPage)}
@@ -42,7 +51,7 @@ class PostShow extends Component {
 }
 
 export default withRouter(connect(
-  (state, { history, match}) => {
+  (state, { history, match }) => {
     return ({
       post: state.dashboard.postOne,
       history,

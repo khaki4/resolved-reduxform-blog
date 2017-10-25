@@ -31,6 +31,7 @@ class PostIndex extends Component {
     console.log('--------------------------------------------')
     return (
       <div>
+        {this.props.test()}
         <Grid columns={2} divided>
           <Grid.Row>
             <Grid.Column>
@@ -52,6 +53,9 @@ class PostIndex extends Component {
 }
 
 export default connect(
-  (state, ownProps) => ({posts: getSelectVisiblePosts(state.dashboard.posts, ownProps.match.params.filter)}),
+  (state, ownProps) => ({
+    posts: getSelectVisiblePosts(state.dashboard.posts, ownProps.match.params.filter),
+    test: ownProps.location.asdkfjaskjdflaksdjfl ? ownProps.location.asdkfjaskjdflaksdjfl.testFn : () => 'eee'
+  }),
   { requestPost }
 )(PostIndex)

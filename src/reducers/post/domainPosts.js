@@ -26,8 +26,8 @@ export const deletePostRequest  = (id, goRootPage) => ({ type: POST_DELETE_REQUE
 
 // Reducers
 const postsSchema = new schema.Entity('posts')
-const postsListSchema = [postsSchema];
-const initState = {
+export const postsListSchema = [postsSchema];
+export const initState = {
   posts: [],
   postOne: {},
 }
@@ -36,7 +36,6 @@ const initState = {
 export default (state = initState, action) => {
   switch (action.type) {
     case POST_LOAD:
-      console.log('posts:', normalize(action.payload, postsListSchema))
       return {
         ...state,
         posts: normalize(action.payload, postsListSchema).entities.posts
@@ -77,7 +76,7 @@ export const getSelectVisiblePosts = (() => {
           return post
         }
       })
-      
+
       return filteredPosts
     }
   )
