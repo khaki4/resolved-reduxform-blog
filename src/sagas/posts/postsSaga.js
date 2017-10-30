@@ -3,78 +3,72 @@ import * as fromPostService from '../../service/postService';
 import * as fromDomainPosts from '../../reducers/post/domainPosts'
 import * as fromUiPostAddModal from '../../reducers/post/uiPostAddModal'
 
-function* fetchPosts() {
+export function* fetchPosts() {
   try {
-    const response = yield fromPostService.getPosts();
-    console.log('-----------------------------');
-    console.log('response:', response);
-    console.log('-----------------------------');
+    const response = yield call(fromPostService.getPosts);
     yield put(fromDomainPosts.loadPosts(response.data));
   } catch (error) {
     console.warn(error);
   }
 }
-function* fetchOnePost(action) {
+
+
+export function* fetchOnePost(action) {
   try {
-    const response = yield fromPostService.getOnePost(action.payload);
-    console.log('-----------------------------');
-    console.log('one post:', response);
-    console.log('-----------------------------');
+    const response = yield call(fromPostService.getOnePost, action.payload);
     yield put(fromDomainPosts.loadOnePost(response.data));
   } catch (error) {
     console.warn(error);
   }
 }
 
-function* createNewPost(action) {
+export function* createNewPost(action) {
   console.log('createNewPost:', action);
   try {
-    const response = yield fromPostService.createPost(action.post);
+    const response = yield call(fromPostService.createPost, action.post);
     yield put(fromDomainPosts.addPost(response.data));
-    yield action.resetForm();
+    yield put(action.resetForm());
     yield put(fromUiPostAddModal.changeModalWindow(false));
     yield action.resetForm()
   } catch (error) {
     console.warn(error);
   }
 }
-function* goRootPage(action) {
-  yield action();
+export function* goRootPage(action) {
+  yield call(action);
 }
-function* deletePost(action) {
+export function* deletePost(action) {
   console.log('deletePost action:', action);
   try {
-    yield fromPostService.destoryPost(action.payload);
+    yield call(fromPostService.destoryPost, action.payload);
     yield call(goRootPage, action.goRootPage);
   } catch (error) {
     console.log('error deletePost -', error);
   }
 }
 
-function* watchFetchPostsRequest() {
+// watch Sagas
+export function* watchFetchPostsRequest() {
   while (true) {
     yield take(fromDomainPosts.POST_FETCH_REQUEST);
     yield call(fetchPosts);
   }
 }
-function* watchFetchOnePostRequest() {
+export function* watchFetchOnePostRequest() {
   while (true) {
     const action = yield take(fromDomainPosts.POST_FETCH_ONE_REQUEST);
     yield call(fetchOnePost, action);
   }
 }
-function* watchCreatePostRequest() {
+export function* watchCreatePostRequest() {
   while (true) {
     const action = yield take(fromDomainPosts.POST_CREATE_REQUEST);
     yield call(createNewPost, action);
   }
 }
-function* watchDeletePostRequest() {
+export function* watchDeletePostRequest() {
   while (true) {
     const action = yield take(fromDomainPosts.POST_DELETE_REQUEST);
-    console.log('-----------------------------');
-    console.log('watchDeletePostRequest:', action);
-    console.log('-----------------------------');
     yield call(deletePost, action);
   }
 }
