@@ -6,6 +6,7 @@
     "axios": "^0.16.2",
     "lodash": "^4.17.4",
     "normalizr": "^3.2.3",
+    "ramda": "^0.25.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
