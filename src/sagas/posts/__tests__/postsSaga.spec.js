@@ -79,7 +79,7 @@ describe('sagas/posts/postsSaga', () => {
     it('call createNewPost saga', () => {
       expect(gen.next(action).value).toEqual(call(fromUut.createNewPost, action))
     })
-    it.skip('작성된 post로 새로운 post를 추가 하고 폼이 리셋되어야 한다', () => {
+    it('작성된 post로 새로운 post를 추가 하고 폼이 리셋되어야 한다', () => {
       const action = {
         type: fromDomainPosts.POST_CREATE_REQUEST,
         post: {id: 158114, title: "..-_-", categories: "test", content: "ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹ"},
@@ -90,9 +90,14 @@ describe('sagas/posts/postsSaga', () => {
         .toEqual(call(fromPostService.createPost, action.post))
       expect(gen.next(response).value)
         .toEqual(put(fromDomainPosts.addPost(response.data)))
-      gen.next()
+      expect(gen.next().value)
+        .toEqual(action.resetForm())
       expect(gen.next().value)
         .toEqual(put(fromUiPostAddModal.changeModalWindow(false)))
+      expect(gen.next().value)
+        .toEqual(action.resetForm())
+      expect(gen.next().done)
+        .toBe(true)
     })
   })
 

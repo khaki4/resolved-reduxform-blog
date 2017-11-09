@@ -2,7 +2,7 @@ import R from 'ramda';
 import * as uut from '../postService';
 global.fetch = require('jest-fetch-mock');
 
-describe.only('service/postService', () => {
+describe('service/postService', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -26,7 +26,7 @@ describe.only('service/postService', () => {
       content: 'ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹ'
     }
   ];
-  it('초기 값을 fetch해야 한다', async () => {
+  it.skip('초기 값을 fetch해야 한다', async () => {
     const response = await uut.getPosts();
     const responseData = response.data
     const hasIdInProps = R.compose(

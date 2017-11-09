@@ -1,11 +1,37 @@
 import { normalize, schema } from 'normalizr';
 import { Reducer, Selector } from 'redux-testkit'
+import { createStore, applyMiddleware } from 'redux'
+import { composeWithDevTools } from 'redux-devtools-extension'
+import createSagaMiddleware from 'redux-saga';
+import reducers from '../../../reducers/rootReducer'
 import uut, * as fromUut from '../domainPosts'
 
+const storeInitState = {
+  "dashboard": {
+    "postOne": {},
+    "posts": []
+  },
+  "form": {},
+  "ui": {
+    "uiPostAddModal": {"isOpen": false}
+  }
+}
 const initState = {
   posts: [],
   postOne: {},
 }
+let store = {}
+
+beforeEach(() => {
+  jest.resetAllMocks();
+  const sagaMiddleware = createSagaMiddleware({ })
+  store = createStore(
+    reducers,
+    composeWithDevTools(
+      applyMiddleware(sagaMiddleware)
+    )
+  )
+});
 
 describe('reducers/post/domainPosts', () => {
   describe('reducer test', () => {
@@ -63,6 +89,68 @@ describe('reducers/post/domainPosts', () => {
         3 :{id: 3, title: "헐 4..-_-", categories: "test3", content: "1"},
       }
       expect(fromUut.getSelectVisiblePosts(posts, 'test')).toEqual([posts[1]])
+    })
+  })
+
+  describe('flow case test', () => {
+    const post = {id: 1, title: "헐 2..-_-", categories: "test", content: "1"}
+    it('알수 없는 타입의 결과로 이전 스테이트를 리턴한다', () => {
+      const undefinedAction = {type: 'UNDEFINED'}
+      Reducer(uut).expect(undefinedAction).toReturnState({
+        ...initState,
+      })
+    })
+    it('test1의 결과로 post가 추가되어야 한다', () => {
+      const action = {type: fromUut.TEST_1, payload: post}
+      Reducer(uut).expect(action).toReturnState({
+        ...initState,
+        posts: [
+          post
+        ]
+      })
+    })
+    it('test2의 결과로 post가 추가되어야 한다', () => {
+      const action = {type: fromUut.TEST_2, payload: post}
+      Reducer(uut).expect(action).toReturnState({
+        ...initState,
+        posts: [
+          post
+        ]
+      })
+    })
+    it('test3의 결과로 post가 추가되어야 한다', () => {
+      const action = {type: fromUut.TEST_3, payload: post}
+      Reducer(uut).expect(action).toReturnState({
+        ...initState,
+        posts: [
+          post
+        ]
+      })
+    })
+    it('test1, test2, test3의 결과로 post3개가 추가 되어야 한다', () => {
+      const action1 = {type: fromUut.TEST_1, payload: post}
+      const action2 = {type: fromUut.TEST_2, payload: post}
+      const action3 = {type: fromUut.TEST_3, payload: post}
+      const initState = store.getState()
+      store.dispatch(action1)
+      store.dispatch(action2)
+      store.dispatch(action3)
+      expect(store.getState())
+        .toEqual({
+          ...initState,
+          dashboard: {
+            ...initState.dashboard,
+            posts: [
+              post,
+              post,
+              post
+            ]
+          }
+        })
+    })
+    it('store는 initstate와 같아야 한다', () => {
+      expect(store.getState())
+        .toEqual(storeInitState)
     })
   })
 })

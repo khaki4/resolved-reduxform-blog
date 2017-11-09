@@ -27,7 +27,7 @@ export function* createNewPost(action) {
   try {
     const response = yield call(fromPostService.createPost, action.post);
     yield put(fromDomainPosts.addPost(response.data));
-    yield put(action.resetForm());
+    yield action.resetForm()
     yield put(fromUiPostAddModal.changeModalWindow(false));
     yield action.resetForm()
   } catch (error) {
@@ -38,7 +38,6 @@ export function* goRootPage(action) {
   yield call(action);
 }
 export function* deletePost(action) {
-  console.log('deletePost action:', action);
   try {
     yield call(fromPostService.destoryPost, action.payload);
     yield call(goRootPage, action.goRootPage);
